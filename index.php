@@ -4,9 +4,13 @@ include_once 'classes/Register.php';
 
 $re = new Register();
 
-if($_SERVER['REQUEST_METHOD']=='POST'){
- $register = $re-> addRegister($_POST,$_FILES);
+//if($_SERVER['REQUEST_METHOD']=='POST'){
+ //$register = $re-> addRegister($_POST,$_FILES,$id);
+//}
 
+if(isset($_GET['delStd'])){
+$id = base64_decode($_GET['delStd']);
+$delStudent = $re-> delStudent($id);
 
 }
 
@@ -28,19 +32,19 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
 
-    <title>Registration</title>
+    <title>Add Students</title>
   </head>
   <body>
     <br>
    <div class ="container">
     <div class="row d-flex justify-content-center">
-        <div class="col-md-7">
+        <div class="col-md-12">
             <div class="card shadow">
-              <?php 
-              if(isset($register)){ 
+               <?php 
+              if(isset($delStudent)){ 
                 ?>
                 <div class="alert alert-warning alert-dismissible fade show" role="alert">
-  <strong><?= $register ?></strong> You should check in on some of those fields below.
+  <strong><?=$delStudent?></strong>
   <button type="button" class="close" data-dismiss="alert" aria-label="Close">
     <span aria-hidden="true">&times;</span>
   </button>
@@ -48,27 +52,50 @@ if($_SERVER['REQUEST_METHOD']=='POST'){
 <?php 
 }
  ?>
+           
                 <div class="card-header">
-                    <h1>Student Registration Form</h1>
-                    
+                   <div class ="row">
+                        <div class="col-md-6">
+                            <h3>All Student Form</h3>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="addstd.php" class="btn btn-info float-right">Add Student</a>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
-                    <form method ="POST" 
-                    enctype ="multipart/form-data">
-                        <label for ="">Name</label>
-                        <input type="text" name="name" placeholder="Enter Your Name" class="form-control">
-                        <label for ="">Email</label>
-                        <input type="email" name="email" placeholder="Enter Your Email" class="form-control">
-                        <label for ="">Phone</label>
-                        <input type="number" name="phone" placeholder="Enter Your Phone" class="form-control">
-                          <label for ="">Photo</label>
-                        <input type="file" name="photo"  class="form-control">
-                        <label for ="">Address</label>
-                       <textarea name="address" class="form-control" placeholder="Enter Your Address"></textarea>
-                        <br>
-                        <input type="submit" value="Register" class="btn btn-success form-control">
-                    </form>
-                </div>
+                    <table class = "table table-bordered">
+                        <tr> 
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Photo</th>
+                            <th>Address</th>
+                            <th>Action</th>
+                        </tr>
+                        <?php 
+                        $allStd = $re-> allStudent();
+                        while($row = mysqli_fetch_assoc($allStd)){ 
+                        ?>
+                       <tr>
+                           <td><?= $row['name'] ?></td>
+                           <td><?= $row['email'] ?></td>
+                           <td><?= $row['phone'] ?></td>
+                           <td><img style="width: 100px;" src = "<?= $row['photo']?>"
+                           class =" img-flued" alt = "">
+                        </td>
+
+
+                           <td><?= $row['address'] ?></td>
+                           <td>
+                            <a href = "edit.php?id=<?=base64_encode($row['id'])?>" class = "btn btn-info btn-sm btn-warning">Edit</a>
+                            <a href ="?delStd=<?=base64_encode($row['id'])?>" onclick="return confirm ('Are you sure to delete')" class = "btn btn-danger ">Delete</a>
+                           </td>
+                          </tr> 
+                          <?php } ?>
+
+                    </table>
+               </div>
                 
 
             </div>

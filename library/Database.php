@@ -24,8 +24,7 @@ public function dbConnect() {
  }
 }
 
-public function insert($query){var_dump('habijabi');
-die();
+public function insert($query){
    $result = mysqli_query ($this->link, $query) or die ($this->link->error. __LINE__);
    if($result){
     return $result;
@@ -34,6 +33,34 @@ die();
 }
 }
 
+public function select($query){
+   $result = mysqli_query ($this->link, $query) or die ($this->link->error . __LINE__);
+   if(mysqli_num_rows($result)>0){
+    return $result;
+}else{
+    return false;
+}
+}
+//Update
+public function update($query){
+   $result = mysqli_query ($this->link, $query) or die ($this->link->error. __LINE__);
+   if($result){
+    return $result;
+}else{
+    return false;
+}
+}
+//delete
+public function delete($query){
+   $result = mysqli_query ($this->link, $query) or die ($this->link->error. __LINE__);
+   if($result){
+    return $result;
+}else{
+    return false;
+}
+
 
 
 }
+}
+?>
